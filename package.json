@@ -1,6 +1,6 @@
 {
   "name": "minter-typescript-sdk",
-  "version": "1.0.25",
+  "version": "1.1.0",
   "description": "minter-typescript-sdk",
   "main": "lib/index.js",
   "scripts": {
@@ -11,9 +11,7 @@
     "tslint": "tslint -p tslint -p tsconfig.json",
     "codestyle": "npm run prettier && npm run tslint",
     "docsify": "docsify serve ./docs",
-    "typedoc_old": "typedoc --out ./docs/api ./src --mode file --readme docs/README.md",
     "typedoc": "typedoc --out ./docs/api ./src --readme docs/README.md",
-    "typedoc_test": "typedoc --out docs/api src/index.ts",
     "docs": "npm run typedoc && npm run docsify",
     "grpc": "sh bin/build_grpc.sh"
   },
