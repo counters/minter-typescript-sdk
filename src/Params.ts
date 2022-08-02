@@ -1,0 +1,39 @@
+import { AddressRequest, CoinInfoRequest, EstimateCoinSellRequest, SwapFrom } from './proto/resources_pb';
+
+class Params {
+  public requestCoinInfo(symbol: string, height: number | null = null): CoinInfoRequest {
+    const request = new CoinInfoRequest();
+    if (height) request.setHeight(height);
+    return request.setSymbol(symbol);
+  }
+
+  public requestAddress(address: string, delegated: boolean | null = null, height: number | null = null): AddressRequest {
+    const request = new AddressRequest();
+    if (height) request.setHeight(height);
+    if (delegated !== null) request.setDelegated(delegated);
+    return request.setAddress(address);
+  }
+
+  // tslint:disable:variable-name
+  public requestEstimateCoinSell(
+    coinToSell: number,
+    valueToSell: string,
+    coinToBuy: number = 0,
+    coin_id_commission: number | null = null,
+    swap_from: SwapFrom | null = null,
+    route: Array<number> | null = null,
+    height: number | null = null
+  ): EstimateCoinSellRequest {
+    const request = new EstimateCoinSellRequest();
+    if (height) request.setHeight(height);
+    if (coin_id_commission) request.setCoinIdCommission(coin_id_commission);
+    /*if (swap_from!==null) */ request.setSwapFrom(swap_from!);
+    if (route) request.setRouteList(route);
+    return request
+      .setCoinIdToSell(coinToSell)
+      .setValueToSell(valueToSell)
+      .setCoinIdToBuy(coinToBuy);
+  }
+}
+
+export default Params;
