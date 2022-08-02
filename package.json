@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc",
+    "build": "tsc && npm run copy_grpc",
     "dev": "tsc --watch",
     "prettier": "prettier --write src/* test/*",
     "tslint": "tslint -p tslint -p tsconfig.json",
@@ -13,7 +13,8 @@
     "docsify": "docsify serve ./docs",
     "typedoc": "typedoc --out ./docs/api ./src --readme docs/README.md",
     "docs": "npm run typedoc && npm run docsify",
-    "grpc": "sh bin/build_grpc.sh"
+    "grpc": "sh bin/build_grpc.sh",
+    "copy_grpc": "sh bin/copy_grpc.sh"
   },
   "husky": {
     "hooks": {
