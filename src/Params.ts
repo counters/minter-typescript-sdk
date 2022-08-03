@@ -1,4 +1,4 @@
-import { AddressRequest, CoinInfoRequest, EstimateCoinSellRequest, SwapFrom } from './proto/resources_pb';
+import { AddressRequest, BestTradeRequest, CoinInfoRequest, EstimateCoinSellRequest, SwapFrom } from "./proto/resources_pb";
 
 class Params {
   public requestCoinInfo(symbol: string, height: number | null = null): CoinInfoRequest {
@@ -33,6 +33,25 @@ class Params {
       .setCoinIdToSell(coinToSell)
       .setValueToSell(valueToSell)
       .setCoinIdToBuy(coinToBuy);
+  }
+
+  requestBestTrade(
+    sell_coin: number,
+    amount: string,
+    buy_coin: number,
+    type: BestTradeRequest.Type,
+    max_depth: number | null = null,
+    height: number | null = null
+  ): BestTradeRequest {
+    const request = new BestTradeRequest();
+    if (height) request.setHeight(height);
+    if (max_depth) request.setMaxDepth(max_depth);
+
+    return request
+      .setType(type)
+      .setSellCoin(sell_coin)
+      .setBuyCoin(buy_coin)
+      .setAmount(amount);
   }
 }
 
