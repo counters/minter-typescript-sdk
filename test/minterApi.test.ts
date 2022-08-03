@@ -1,7 +1,7 @@
-import MinterApi from '../src';
-import Config from './Config';
+import MinterApi from "../src";
+import Config from "./Config";
 
-test('MinterApi().estimateCoinSell()', async () => {
+test("MinterApi().estimateCoinSell()", async () => {
   const config = new Config();
   const grpcMinterApi = new MinterApi(config.grpcOptions);
   const httpMinterApi = new MinterApi(null, config.httpOptions);
