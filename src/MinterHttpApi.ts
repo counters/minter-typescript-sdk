@@ -1,18 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   AddressRequest,
   AddressResponse,
+  BestTradeRequest, BestTradeResponse,
   CoinInfoRequest,
   CoinInfoResponse,
   EstimateCoinSellRequest,
   EstimateCoinSellResponse,
   SwapFrom
-} from './proto/resources_pb';
-import HttpOptions from './types/HttpOptions';
-import JsonToGrpc from './JsonToGrpc';
-import Params from './Params';
-import ConvertSwapFrom from './convert/ConvertSwapFrom';
-import ConvertAmount from './utils/ConvertAmount';
+} from "./proto/resources_pb";
+import HttpOptions from "./types/HttpOptions";
+import JsonToGrpc from "./JsonToGrpc";
+import Params from "./Params";
+import ConvertSwapFrom from "./convert/ConvertSwapFrom";
+import ConvertAmount from "./utils/ConvertAmount";
+import ConvertBestTradeType from "./convert/ConvertBestTradeType";
 
 class MinterHttpApi {
   private httpOptions: HttpOptions;
@@ -24,6 +26,7 @@ class MinterHttpApi {
   private convertAmount = new ConvertAmount();
 
   private convertSwapFrom = new ConvertSwapFrom();
+  private convertBestTradeType = new ConvertBestTradeType();
 
   constructor(httpOptions: HttpOptions) {
     this.httpOptions = httpOptions;
@@ -47,7 +50,7 @@ class MinterHttpApi {
     return this.httpGet(this.urlAddress(request), timeout);
   }
 
-  public getAddressGrpcRequest(request: AddressRequest, timeout: number | null = null): Promise<AddressResponse> {
+  public getAddressGrpcByRequest(request: AddressRequest, timeout: number | null = null): Promise<AddressResponse> {
     return new Promise<AddressResponse>((resolve, reject) => {
       this.getAddressJsonByRequest(request, timeout)
         .then(value => resolve(this.jsonToGrpc.Address(value)))
@@ -55,14 +58,9 @@ class MinterHttpApi {
     });
   }
 
-  public getAddressGrpc(
-    address: string,
-    delegated: boolean | null = null,
-    height: number | null = null,
-    timeout: number | null = null
-  ): Promise<AddressResponse> {
+  public getAddressGrpc(address: string, delegated: boolean | null = null, height: number | null = null, timeout: number | null = null): Promise<AddressResponse> {
     const request = this.params.requestAddress(address, delegated, height);
-    return this.getAddressGrpcRequest(request, timeout);
+    return this.getAddressGrpcByRequest(request, timeout);
   }
 
   public getCoinInfoJsonByRequest(request: CoinInfoRequest, timeout: number | null = null): Promise<Record<string, any>> {
@@ -76,7 +74,7 @@ class MinterHttpApi {
   public estimateCoinSellJsonByRequest(request: EstimateCoinSellRequest, timeout: number | null = null): Promise<Record<string, any>> {
     return this.httpGet(this.urlEstimateCoinSell(request), timeout);
   }
-  public estimateCoinSellGrpcRequest(request: EstimateCoinSellRequest, timeout: number | null = null): Promise<EstimateCoinSellResponse> {
+  public estimateCoinSellGrpcByRequest(request: EstimateCoinSellRequest, timeout: number | null = null): Promise<EstimateCoinSellResponse> {
     return new Promise<EstimateCoinSellResponse>((resolve, reject) => {
       this.estimateCoinSellJsonByRequest(request, timeout)
         .then(value => resolve(this.jsonToGrpc.EstimateCoinSell(value)))
@@ -87,38 +85,56 @@ class MinterHttpApi {
     coinToSell: number,
     valueToSell: number,
     coinToBuy: number = 0,
-    // tslint:disable-next-line:variable-name
     coin_id_commission: number | null = null,
-    // tslint:disable-next-line:variable-name
     swap_from: SwapFrom | null = null,
     route: Array<number> | null = null,
     height: number | null = null,
     timeout: number | null = null
   ): Promise<EstimateCoinSellResponse> {
-    const request = this.params.requestEstimateCoinSell(
-      coinToSell,
-      this.convertAmount.toPip(valueToSell),
-      coinToBuy,
-      coin_id_commission,
-      swap_from,
-      route,
-      height
-    );
-    return this.estimateCoinSellGrpcRequest(request, timeout);
+    const request = this.params.requestEstimateCoinSell(coinToSell, this.convertAmount.toPip(valueToSell), coinToBuy, coin_id_commission, swap_from, route, height);
+    return this.estimateCoinSellGrpcByRequest(request, timeout);
   }
+
+  public getBestTradeJsonByRequest(request: BestTradeRequest, timeout: number | null = null): Promise<Record<string, any>> {
+    return this.httpGet(this.urlBestTrade(request), timeout);
+  }
+
+  public getBestTradeGrpcByRequest(request: BestTradeRequest, timeout: number | null = null): Promise<BestTradeResponse> {
+    return new Promise<BestTradeResponse>((resolve, reject) => {
+      this.getBestTradeJsonByRequest(request, timeout)
+          .then(value => resolve(this.jsonToGrpc.BestTrade(value)))
+          .catch(reject);
+    });
+  }
+
+  public getBestTradeGrpc(
+      sell_coin: number,
+      amount: number,
+      buy_coin: number,
+      type: BestTradeRequest.Type,
+      max_depth: number | null = null,
+      height: number | null = null,
+    timeout: number | null = null
+  ): Promise<BestTradeResponse> {
+    const request = this.params.requestBestTrade(sell_coin, this.convertAmount.toPip(amount), buy_coin, type, max_depth, height);
+    return this.getBestTradeGrpcByRequest(request, timeout);
+  }
+
+
+
 
   private urlCoinInfo(request: CoinInfoRequest): string {
     const params: Array<Record<string, string>> = [];
     if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-    return this.url(this.nodeUrl + 'coin_info/' + request.getSymbol(), params);
+    return this.url(this.nodeUrl + "coin_info/" + request.getSymbol(), params);
   }
 
   private urlAddress(request: AddressRequest) {
     const params: Array<Record<string, string>> = [];
     if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-    if (request.getDelegated() === true) params.push({ delegated: 'true' });
-    else if (request.getDelegated() === false) params.push({ delegated: 'false' });
-    return this.url(this.nodeUrl + 'address/' + request.getAddress(), params);
+    if (request.getDelegated() === true) params.push({ delegated: "true" });
+    else if (request.getDelegated() === false) params.push({ delegated: "false" });
+    return this.url(this.nodeUrl + "address/" + request.getAddress(), params);
   }
 
   private url(patch: string, params: ReadonlyArray<Record<string, string>>): string {
@@ -130,7 +146,7 @@ class MinterHttpApi {
         query.push(`${key}=${val[key]}`);
       }
     });
-    return query.length > 0 ? patch + '?' + query.join('&') : patch;
+    return query.length > 0 ? patch + "?" + query.join("&") : patch;
   }
 
   private httpGet(url: string, timeout: number | null = null): Promise<Record<string, Array<any>>> {
@@ -163,7 +179,15 @@ class MinterHttpApi {
     });
     params.push({ coin_id_commission: request.getCoinIdCommission().toString() });
     // console.info(params);
-    return this.url(this.nodeUrl + 'estimate_coin_sell', params);
+    return this.url(this.nodeUrl + "estimate_coin_sell", params);
+  }
+
+  private urlBestTrade(request: BestTradeRequest): string {
+    const params: Array<Record<string, string>> = [];
+    if (request.getHeight() && request.getHeight()!==0) params.push({ "height": request.getHeight().toString() });
+    if (request.getMaxDepth() ) params.push({ "max_depth": request.getMaxDepth().toString() });
+    const type = this.convertBestTradeType.getName(request.getType());
+    return this.url(this.nodeUrl + "best_trade/"+request.getSellCoin()+"/"+request.getBuyCoin()+"/"+type+"/"+request.getAmount(), params);
   }
 }
 
