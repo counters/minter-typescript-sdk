@@ -28,6 +28,6 @@ export { default as Params } from './Params';
 
 export * as Grpc from './grpc';
 
-// export { ConvertAmount };
+export { MinterApi };
 // export { GrpcOptions, HttpOptions };
 export default MinterApi;

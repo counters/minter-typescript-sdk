@@ -8,4 +8,5 @@ export { default as ConvertAmount } from './utils/ConvertAmount';
 export { default as ConvertSwapFrom } from './convert/ConvertSwapFrom';
 export { default as Params } from './Params';
 export * as Grpc from './grpc';
+export { MinterApi };
 export default MinterApi;
