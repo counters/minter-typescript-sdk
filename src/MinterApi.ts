@@ -1,10 +1,20 @@
-import HttpOptions from './types/HttpOptions';
-import GrpcOptions from './types/GrpcOptions';
-import MinterHttpApi from './MinterHttpApi';
-import MinterGrpcApi from './MinterGrpcApi';
-import { CoinInfoResponse, CoinInfoRequest, AddressResponse, AddressRequest, EstimateCoinSellResponse, SwapFrom } from './proto/resources_pb';
-import Params from './Params';
-import ConvertAmount from './utils/ConvertAmount';
+import HttpOptions from "./types/HttpOptions";
+import GrpcOptions from "./types/GrpcOptions";
+import MinterHttpApi from "./MinterHttpApi";
+import MinterGrpcApi from "./MinterGrpcApi";
+import {
+  CoinInfoResponse,
+  CoinInfoRequest,
+  AddressResponse,
+  AddressRequest,
+  EstimateCoinSellResponse,
+  SwapFrom,
+  BestTradeRequest,
+  BestTradeResponse,
+  EstimateCoinSellRequest
+} from "./proto/resources_pb";
+import Params from "./Params";
+import ConvertAmount from "./utils/ConvertAmount";
 
 class MinterApi {
   private readonly grpcOptions: GrpcOptions | null = null;
@@ -45,12 +55,7 @@ class MinterApi {
     }
   }
 
-  public getAddressGrpc(
-    address: string,
-    delegated: boolean | null = null,
-    height: number | null = null,
-    deadline: number | null = null
-  ): Promise<AddressResponse> {
+  public getAddressGrpc(address: string, delegated: boolean | null = null, height: number | null = null, deadline: number | null = null): Promise<AddressResponse> {
     if (this.grpcOptions) {
       return this.minterGrpcApi!.getAddressGrpc(this.params.requestAddress(address, delegated, height), deadline);
     } else {
@@ -59,7 +64,7 @@ class MinterApi {
     }
   }
 
-  public getAddressByRequest(request: AddressRequest, deadline: number | null = null): Promise<AddressResponse> {
+  public getAddressGrpcByRequest(request: AddressRequest, deadline: number | null = null): Promise<AddressResponse> {
     if (this.grpcOptions) {
       return this.minterGrpcApi!.getAddressGrpc(request, deadline);
     } else {
@@ -89,12 +94,27 @@ class MinterApi {
     }
   }
 
-  public estimateCoinSellByRequest(request: AddressRequest, deadline: number | null = null): Promise<AddressResponse> {
+  public estimateCoinSellByRequest(request: EstimateCoinSellRequest, deadline: number | null = null): Promise<EstimateCoinSellResponse> {
     if (this.grpcOptions) {
-      return this.minterGrpcApi!.getAddressGrpc(request, deadline);
+      return this.minterGrpcApi!.estimateCoinSellGrpc(request, deadline);
     } else {
-      return this.minterGrpcApi!.getAddressGrpc(request, deadline);
-      // return this.minterHttpApi!.getAddressGrpcRequest(request, deadline);
+      return this.minterHttpApi!.estimateCoinSellGrpcByRequest(request, deadline);
+    }
+  }
+
+  getBestTradeGrpc(
+      sell_coin: number,
+      amount: number,
+      buy_coin: number,
+      type: BestTradeRequest.Type,
+      max_depth: number | null = null,
+      height: number | null = null,
+      deadline: number | null = null
+  ): Promise<BestTradeResponse> {
+    if (this.grpcOptions) {
+      return this.minterGrpcApi!.getBestTradeGrpc(this.params.requestBestTrade(sell_coin, this.convertAmount.toPip(amount), buy_coin, type, max_depth, height), deadline);
+    } else {
+      return this.minterHttpApi!.getBestTradeGrpc(sell_coin, amount, buy_coin, type, max_depth, height, deadline);
     }
   }
 }
