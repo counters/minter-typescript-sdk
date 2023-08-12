@@ -68,4 +68,5 @@ estimateCoinSell, getAddress
 ```ts
 const convertAmount = new ConvertAmount();
 console.info(convertAmount.toBip("1000000000000000000")); // 1.0
+console.info(convertAmount.toPip(1.0)); // 1000000000000000000
 ```
