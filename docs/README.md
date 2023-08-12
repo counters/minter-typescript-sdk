@@ -61,6 +61,27 @@ console.info(bestTrade.toObject()); // { pathList: [ 3757, 1902 ], result: '7929
 ### Other methods available
 estimateCoinSell, getAddress
 
+### Advanced usage
+
+```ts
+const convertAmount = new ConvertAmount()
+
+const deadline: number | null = null;
+const sell_coin = 1902;
+const buy_coin = 0;
+const amount = 1.0;
+const type = BestTradeRequest.Type.INPUT;
+const height: number | null = null;
+const max_depth: number | null = null;
+
+minterApi.getBestTradeGrpc(sell_coin, amount, buy_coin, type, max_depth, height, deadline)
+    .then(value => {
+        console.info(value.toObject()); // { pathList: [ 1902, 0 ], result: '10838518193168082966333' }
+        console.info(convertAmount.toBip(value.getResult() )); // 10838.518193168084
+    })
+    .catch(error => console.error(error));
+```
+
 ## Utils
 
 ### ConvertAmount
