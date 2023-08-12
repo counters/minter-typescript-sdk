@@ -24,7 +24,7 @@ const minterApi = new MinterApi(null, httpOptions);
 ### Import for browser
 
 ```ts
-import MinterApi, {HttpOptions} from "minter-typescript-sdk/browser";
+import MinterApi, {HttpOptions} from "minter-typescript-sdk/lib/browser";
 ```
 
 ### gRPC transport
