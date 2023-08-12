@@ -60,3 +60,12 @@ console.info(bestTrade.toObject()); // { pathList: [ 3757, 1902 ], result: '7929
 
 ### Other methods available
 estimateCoinSell, getAddress
+
+## Utils
+
+### ConvertAmount
+
+```ts
+const convertAmount = new ConvertAmount();
+console.info(convertAmount.toBip("1000000000000000000")); // 1.0
+```
