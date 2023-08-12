@@ -28,3 +28,15 @@ const grpcOptions: GrpcOptions = { hostname: 'minter-api', port: 8842, deadline:
 const minterApi = new MinterApi(grpcOptions);
 ```
 
+
+## Methods
+
+### getCoinInfo
+
+```ts
+const coinInfo = await minterApi.getCoinInfoGrpc("COUNTER");
+console.info(coinInfo.toObject());
+```
+
+![Minter TypeScript SDK code completion](sdk-code-completion.png "Minter TypeScript SDK code completion")
+
