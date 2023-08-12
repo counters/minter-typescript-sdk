@@ -21,10 +21,10 @@ const httpOptions: HttpOptions = { raw: 'http://minter-api:8843/v2/', timeout: n
 const minterApi = new MinterApi(null, httpOptions);
 ```
 
-### Import for browser
+### Import for browser (optional)
 
 ```ts
-import MinterApi, {HttpOptions} from "minter-typescript-sdk/browser";
+import MinterApi, {HttpOptions} from "minter-typescript-sdk/lib/browser";
 ```
 
 ### gRPC transport
