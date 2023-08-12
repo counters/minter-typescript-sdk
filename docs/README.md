@@ -42,3 +42,13 @@ console.info(coinInfo.toObject());
 
 ![Minter TypeScript SDK code completion](sdk-code-completion.png "Minter TypeScript SDK code completion")
 
+
+### getBestTrade
+
+```ts
+import {BestTradeRequest} from "minter-typescript-sdk/lib/proto/resources_pb";
+
+const bestTrade = await minterApi.getBestTradeGrpc(3757, 100.0, 1902, BestTradeRequest.Type.INPUT)
+console.info(bestTrade.toObject()); // { pathList: [ 3757, 1902 ], result: '7929802038004399105' }
+```
+
