@@ -9,10 +9,10 @@ test("MinterApi().estimateCoinSell()", async () => {
   const coinToSell = 1902; // HUB
   const route = null;
   const grpcResult = await grpcMinterApi.estimateCoinSellGrpc(coinToSell, 1.0, 0, null, null, route);
-  console.info(grpcResult.toObject());
+  // console.info(grpcResult.toObject());
 
   const httpResult = await httpMinterApi.estimateCoinSellGrpc(coinToSell, 1.0, 0, null, null, route);
-  console.info(httpResult);
-  // expect(grpcResult.toObject()).toEqual(httpResult.toObject());
+  // console.info(httpResult.toObject());
+  expect(grpcResult.toObject()).toEqual(httpResult.toObject());
   // expect(grpcResult.getSymbol()).toEqual(symbol);
 });

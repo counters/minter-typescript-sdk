@@ -1,14 +1,5 @@
 import { StringValue } from "google-protobuf/google/protobuf/wrappers_pb";
-import {
-  AddressBalance,
-  AddressDelegatedBalance,
-  AddressResponse,
-  BestTradeResponse,
-  Coin,
-  CoinInfoResponse,
-  EstimateCoinSellResponse,
-  Multisig
-} from "./proto/resources_pb";
+import { AddressBalance, AddressDelegatedBalance, AddressResponse, BestTradeResponse, Coin, CoinInfoResponse, EstimateCoinSellResponse, Multisig } from "./proto/resources_pb";
 import ConvertSwapFrom from "./convert/ConvertSwapFrom";
 
 class JsonToGrpc {
@@ -98,12 +89,9 @@ class JsonToGrpc {
     const arrPatch: Array<number> = [];
     value.path.forEach((path: string) => {
       arrPatch.push(Number(path));
-    })
+    });
     const response = new BestTradeResponse();
-    response
-        .setPathList(arrPatch)
-        .setResult(value.result)
-        ;
+    response.setPathList(arrPatch).setResult(value.result);
     return response;
   }
 }

@@ -103,13 +103,13 @@ class MinterApi {
   }
 
   getBestTradeGrpc(
-      sell_coin: number,
-      amount: number,
-      buy_coin: number,
-      type: BestTradeRequest.Type,
-      max_depth: number | null = null,
-      height: number | null = null,
-      deadline: number | null = null
+    sell_coin: number,
+    amount: number,
+    buy_coin: number,
+    type: BestTradeRequest.Type,
+    max_depth: number | null = null,
+    height: number | null = null,
+    deadline: number | null = null
   ): Promise<BestTradeResponse> {
     if (this.grpcOptions) {
       return this.minterGrpcApi!.getBestTradeGrpc(this.params.requestBestTrade(sell_coin, this.convertAmount.toPip(amount), buy_coin, type, max_depth, height), deadline);

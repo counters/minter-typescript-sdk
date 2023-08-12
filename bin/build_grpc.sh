@@ -3,7 +3,7 @@
 PROTO_DIR=./src/proto
 LIBS_DIR=./src/proto
 
-rm -r ${PROTO_DIR}/*
+rm -r "${PROTO_DIR}/*"
 
 # Generate JavaScript code
 yarn run grpc_tools_node_protoc \

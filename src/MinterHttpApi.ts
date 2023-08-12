@@ -2,7 +2,8 @@ import axios from "axios";
 import {
   AddressRequest,
   AddressResponse,
-  BestTradeRequest, BestTradeResponse,
+  BestTradeRequest,
+  BestTradeResponse,
   CoinInfoRequest,
   CoinInfoResponse,
   EstimateCoinSellRequest,
@@ -66,6 +67,7 @@ class MinterHttpApi {
   public getCoinInfoJsonByRequest(request: CoinInfoRequest, timeout: number | null = null): Promise<Record<string, any>> {
     return this.httpGet(this.urlCoinInfo(request), timeout);
   }
+
   public getCoinInfoJson(symbol: string, height: number | null = null, timeout: number | null = null): Promise<Record<string, any>> {
     const request = this.params.requestCoinInfo(symbol, height);
     return this.httpGet(this.urlCoinInfo(request), timeout);
@@ -74,6 +76,7 @@ class MinterHttpApi {
   public estimateCoinSellJsonByRequest(request: EstimateCoinSellRequest, timeout: number | null = null): Promise<Record<string, any>> {
     return this.httpGet(this.urlEstimateCoinSell(request), timeout);
   }
+
   public estimateCoinSellGrpcByRequest(request: EstimateCoinSellRequest, timeout: number | null = null): Promise<EstimateCoinSellResponse> {
     return new Promise<EstimateCoinSellResponse>((resolve, reject) => {
       this.estimateCoinSellJsonByRequest(request, timeout)
@@ -81,6 +84,7 @@ class MinterHttpApi {
         .catch(reject);
     });
   }
+
   public estimateCoinSellGrpc(
     coinToSell: number,
     valueToSell: number,
@@ -102,26 +106,23 @@ class MinterHttpApi {
   public getBestTradeGrpcByRequest(request: BestTradeRequest, timeout: number | null = null): Promise<BestTradeResponse> {
     return new Promise<BestTradeResponse>((resolve, reject) => {
       this.getBestTradeJsonByRequest(request, timeout)
-          .then(value => resolve(this.jsonToGrpc.BestTrade(value)))
-          .catch(reject);
+        .then(value => resolve(this.jsonToGrpc.BestTrade(value)))
+        .catch(reject);
     });
   }
 
   public getBestTradeGrpc(
-      sell_coin: number,
-      amount: number,
-      buy_coin: number,
-      type: BestTradeRequest.Type,
-      max_depth: number | null = null,
-      height: number | null = null,
+    sell_coin: number,
+    amount: number,
+    buy_coin: number,
+    type: BestTradeRequest.Type,
+    max_depth: number | null = null,
+    height: number | null = null,
     timeout: number | null = null
   ): Promise<BestTradeResponse> {
     const request = this.params.requestBestTrade(sell_coin, this.convertAmount.toPip(amount), buy_coin, type, max_depth, height);
     return this.getBestTradeGrpcByRequest(request, timeout);
   }
-
-
-
 
   private urlCoinInfo(request: CoinInfoRequest): string {
     const params: Array<Record<string, string>> = [];
@@ -184,10 +185,10 @@ class MinterHttpApi {
 
   private urlBestTrade(request: BestTradeRequest): string {
     const params: Array<Record<string, string>> = [];
-    if (request.getHeight() && request.getHeight()!==0) params.push({ "height": request.getHeight().toString() });
-    if (request.getMaxDepth() ) params.push({ "max_depth": request.getMaxDepth().toString() });
+    if (request.getHeight() && request.getHeight() !== 0) params.push({ height: request.getHeight().toString() });
+    if (request.getMaxDepth()) params.push({ max_depth: request.getMaxDepth().toString() });
     const type = this.convertBestTradeType.getName(request.getType());
-    return this.url(this.nodeUrl + "best_trade/"+request.getSellCoin()+"/"+request.getBuyCoin()+"/"+type+"/"+request.getAmount(), params);
+    return this.url(this.nodeUrl + "best_trade/" + request.getSellCoin() + "/" + request.getBuyCoin() + "/" + type + "/" + request.getAmount(), params);
   }
 }
 

@@ -5,7 +5,8 @@ import {
   AddressResponse,
   EstimateCoinSellRequest,
   EstimateCoinSellResponse,
-  BestTradeRequest, BestTradeResponse
+  BestTradeRequest,
+  BestTradeResponse
 } from "./proto/resources_pb";
 import { ApiServiceClient } from "./proto/api_grpc_pb";
 import { credentials, Metadata } from "@grpc/grpc-js";
