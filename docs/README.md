@@ -58,3 +58,5 @@ const bestTrade = await minterApi.getBestTradeGrpc(3757, 100.0, 1902, BestTradeR
 console.info(bestTrade.toObject()); // { pathList: [ 3757, 1902 ], result: '7929802038004399105' }
 ```
 
+### Other methods available
+estimateCoinSell, getAddress
