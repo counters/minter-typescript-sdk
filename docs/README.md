@@ -1,4 +1,4 @@
-# minter-typescript-sdk
+# Minter TypeScript SDK
 
 The SDK is written in TypeScript with native gRPC transport support (excluding the browser). Suitable for creating WEB 3.0 applications, console and desktop applications.
 
