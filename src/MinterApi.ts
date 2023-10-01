@@ -3,15 +3,17 @@ import GrpcOptions from "./types/GrpcOptions";
 import MinterHttpApi from "./MinterHttpApi";
 import MinterGrpcApi from "./MinterGrpcApi";
 import {
-    CoinInfoResponse,
-    CoinInfoRequest,
-    AddressResponse,
-    AddressRequest,
-    EstimateCoinSellResponse,
-    SwapFrom,
-    BestTradeRequest,
-    BestTradeResponse,
-    EstimateCoinSellRequest, CandidateResponse, CandidateRequest
+  CoinInfoResponse,
+  CoinInfoRequest,
+  AddressResponse,
+  AddressRequest,
+  EstimateCoinSellResponse,
+  SwapFrom,
+  BestTradeRequest,
+  BestTradeResponse,
+  EstimateCoinSellRequest,
+  CandidateResponse,
+  CandidateRequest
 } from "./proto/resources_pb";
 import Params from "./Params";
 import ConvertAmount from "./utils/ConvertAmount";
@@ -118,20 +120,20 @@ class MinterApi {
     }
   }
 
-    public getCandidateGrpc(publicKey: string, notShowStakes: boolean | null = null, height: number | null = null, deadline: number | null = null): Promise<CandidateResponse> {
-        if (this.grpcOptions) {
-            return this.minterGrpcApi!.getCandidateGrpc(this.params.requestCandidate(publicKey, notShowStakes, height), deadline);
-        } else {
-            return this.minterHttpApi!.getCandidateGrpc(publicKey, notShowStakes, height, deadline);
-        }
+  public getCandidateGrpc(publicKey: string, notShowStakes: boolean | null = null, height: number | null = null, deadline: number | null = null): Promise<CandidateResponse> {
+    if (this.grpcOptions) {
+      return this.minterGrpcApi!.getCandidateGrpc(this.params.requestCandidate(publicKey, notShowStakes, height), deadline);
+    } else {
+      return this.minterHttpApi!.getCandidateGrpc(publicKey, notShowStakes, height, deadline);
     }
+  }
 
-    public getCandidateGrpcByRequest(request: CandidateRequest, deadline: number | null = null): Promise<CandidateResponse> {
-        if (this.grpcOptions) {
-            return this.minterGrpcApi!.getCandidateGrpc(request, deadline);
-        } else {
-            return this.minterHttpApi!.getCandidateGrpcByRequest(request, deadline);
-        }
+  public getCandidateGrpcByRequest(request: CandidateRequest, deadline: number | null = null): Promise<CandidateResponse> {
+    if (this.grpcOptions) {
+      return this.minterGrpcApi!.getCandidateGrpc(request, deadline);
+    } else {
+      return this.minterHttpApi!.getCandidateGrpcByRequest(request, deadline);
     }
+  }
 }
 export default MinterApi;
