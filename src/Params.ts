@@ -1,4 +1,11 @@
-import { AddressRequest, BestTradeRequest, CoinInfoRequest, EstimateCoinSellRequest, SwapFrom } from "./proto/resources_pb";
+import {
+    AddressRequest,
+    BestTradeRequest,
+    CandidateRequest,
+    CoinInfoRequest,
+    EstimateCoinSellRequest,
+    SwapFrom
+} from "./proto/resources_pb";
 
 class Params {
   public requestCoinInfo(symbol: string, height: number | null = null): CoinInfoRequest {
@@ -53,6 +60,12 @@ class Params {
       .setBuyCoin(buy_coin)
       .setAmount(amount);
   }
+    public requestCandidate(publicKey: string, notShowStakes: boolean | null = null, height: number | null = null): CandidateRequest {
+        const request = new CandidateRequest();
+        if (height) request.setHeight(height);
+        if (notShowStakes !== null) request.setNotShowStakes(notShowStakes);
+        return request.setPublicKey(publicKey);
+    }
 }
 
 export default Params;
