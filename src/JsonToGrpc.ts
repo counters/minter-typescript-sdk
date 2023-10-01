@@ -1,4 +1,4 @@
-import { StringValue } from "google-protobuf/google/protobuf/wrappers_pb";
+import {StringValue, UInt64Value} from "google-protobuf/google/protobuf/wrappers_pb";
 import {
     AddressBalance,
     AddressDelegatedBalance,
@@ -118,16 +118,19 @@ class JsonToGrpc {
                 .setOwner(item.owner);
             stakesList.push(stake);
         });
+        const minStake = value.min_stake ? new StringValue().setValue(value.min_stake) : undefined;
+new UInt64Value().setValue(parseInt(value.commission))
         response
             .setRewardAddress(value.reward_address)
             .setOwnerAddress(value.owner_address)
             .setControlAddress(value.control_address)
             .setTotalStake(value.total_stake)
             .setPublicKey(value.public_key)
-            // .setCommission(value.commission)
-            // .setUsedSlots(value.used_slots)
-            // .setUniqUsers(value.uniq_users)
-            // .setMinStake(value.min_stake)
+            // .setCommission(parseInt(value.commission))
+            .setCommission(Number(value.commission))
+            .setUsedSlots(new UInt64Value().setValue(parseInt(value.used_slots)))
+            .setUniqUsers(new UInt64Value().setValue(parseInt(value.uniq_users)))
+            .setMinStake(minStake)
             .setStakesList(stakesList)
         ;
         return response;
