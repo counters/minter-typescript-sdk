@@ -194,9 +194,9 @@ class MinterHttpApi {
     private urlCandidate(request: CandidateRequest) {
         const params: Array<Record<string, string>> = [];
         if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-        if (request.getDelegated() === true) params.push({ delegated: "true" });
-        else if (request.getDelegated() === false) params.push({ delegated: "false" });
-        return this.url(this.nodeUrl + "candidate/" + request.getCandidate(), params);
+        if (request.getNotShowStakes() === true) params.push({ not_show_stakes: "true" });
+        else if (request.getNotShowStakes() === false) params.push({ not_show_stakes: "false" });
+        return this.url(this.nodeUrl + "candidate/" + request.getPublicKey(), params);
     }
     public getCandidateJsonByRequest(request: CandidateRequest, timeout: number | null = null): Promise<Record<string, any>> {
         return this.httpGet(this.urlCandidate(request), timeout);
@@ -210,8 +210,8 @@ class MinterHttpApi {
         });
     }
 
-    public getCandidateGrpc(publicKey: string, delegated: boolean | null = null, height: number | null = null, timeout: number | null = null): Promise<CandidateResponse> {
-        const request = this.params.requestCandidate(publicKey, delegated, height);
+    public getCandidateGrpc(publicKey: string, notShowStakes: boolean | null = null, height: number | null = null, timeout: number | null = null): Promise<CandidateResponse> {
+        const request = this.params.requestCandidate(publicKey, notShowStakes, height);
         return this.getCandidateGrpcByRequest(request, timeout);
     }
 
