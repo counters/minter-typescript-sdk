@@ -119,19 +119,19 @@ class JsonToGrpc {
             stakesList.push(stake);
         });
         const minStake = value.min_stake ? new StringValue().setValue(value.min_stake) : undefined;
-new UInt64Value().setValue(parseInt(value.commission))
         response
+            .setId(Number(value.id))
             .setRewardAddress(value.reward_address)
             .setOwnerAddress(value.owner_address)
             .setControlAddress(value.control_address)
             .setTotalStake(value.total_stake)
             .setPublicKey(value.public_key)
-            // .setCommission(parseInt(value.commission))
             .setCommission(Number(value.commission))
-            .setUsedSlots(new UInt64Value().setValue(parseInt(value.used_slots)))
-            .setUniqUsers(new UInt64Value().setValue(parseInt(value.uniq_users)))
+            .setUsedSlots(new UInt64Value().setValue(Number(value.used_slots)))
+            .setUniqUsers(new UInt64Value().setValue(Number(value.uniq_users)))
             .setMinStake(minStake)
             .setStakesList(stakesList)
+            .setStatus(Number(value.status))
         ;
         return response;
     }
