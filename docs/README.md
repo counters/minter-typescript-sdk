@@ -7,7 +7,11 @@ The SDK is written in TypeScript with native gRPC transport support (excluding t
 ```shell
 yarn add minter-typescript-sdk@github:counters/minter-typescript-sdk
 # or
-npm install counters/minter-typescript-sdk
+yarn add minter-typescript-sdk
+# or
+npm install counters/minter-typescript-sdk 
+# or
+npm install minter-typescript-sdk
 ```
 
 ## Init
