@@ -1,14 +1,14 @@
 import axios from "axios";
 import {
-  AddressRequest,
-  AddressResponse,
-  BestTradeRequest,
-  BestTradeResponse,
-  CoinInfoRequest,
-  CoinInfoResponse,
-  EstimateCoinSellRequest,
-  EstimateCoinSellResponse,
-  SwapFrom
+    AddressRequest,
+    AddressResponse,
+    BestTradeRequest,
+    BestTradeResponse, CandidateRequest, CandidateResponse,
+    CoinInfoRequest,
+    CoinInfoResponse,
+    EstimateCoinSellRequest,
+    EstimateCoinSellResponse,
+    SwapFrom
 } from "./proto/resources_pb";
 import HttpOptions from "./types/HttpOptions";
 import JsonToGrpc from "./JsonToGrpc";
@@ -190,6 +190,31 @@ class MinterHttpApi {
     const type = this.convertBestTradeType.getName(request.getType());
     return this.url(this.nodeUrl + "best_trade/" + request.getSellCoin() + "/" + request.getBuyCoin() + "/" + type + "/" + request.getAmount(), params);
   }
+
+    private urlCandidate(request: CandidateRequest) {
+        const params: Array<Record<string, string>> = [];
+        if (request.getHeight()) params.push({ height: request.getHeight().toString() });
+        if (request.getDelegated() === true) params.push({ delegated: "true" });
+        else if (request.getDelegated() === false) params.push({ delegated: "false" });
+        return this.url(this.nodeUrl + "candidate/" + request.getCandidate(), params);
+    }
+    public getCandidateJsonByRequest(request: CandidateRequest, timeout: number | null = null): Promise<Record<string, any>> {
+        return this.httpGet(this.urlCandidate(request), timeout);
+    }
+
+    public getCandidateGrpcByRequest(request: CandidateRequest, timeout: number | null = null): Promise<CandidateResponse> {
+        return new Promise<CandidateResponse>((resolve, reject) => {
+            this.getCandidateJsonByRequest(request, timeout)
+                .then(value => resolve(this.jsonToGrpc.Candidate(value)))
+                .catch(reject);
+        });
+    }
+
+    public getCandidateGrpc(publicKey: string, delegated: boolean | null = null, height: number | null = null, timeout: number | null = null): Promise<CandidateResponse> {
+        const request = this.params.requestCandidate(publicKey, delegated, height);
+        return this.getCandidateGrpcByRequest(request, timeout);
+    }
+
 }
 
 export default MinterHttpApi;
