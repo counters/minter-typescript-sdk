@@ -1,5 +1,15 @@
 import { StringValue } from "google-protobuf/google/protobuf/wrappers_pb";
-import { AddressBalance, AddressDelegatedBalance, AddressResponse, BestTradeResponse, Coin, CoinInfoResponse, EstimateCoinSellResponse, Multisig } from "./proto/resources_pb";
+import {
+    AddressBalance,
+    AddressDelegatedBalance,
+    AddressResponse,
+    BestTradeResponse,
+    CandidateResponse,
+    Coin,
+    CoinInfoResponse,
+    EstimateCoinSellResponse,
+    Multisig
+} from "./proto/resources_pb";
 import ConvertSwapFrom from "./convert/ConvertSwapFrom";
 
 class JsonToGrpc {
@@ -94,6 +104,34 @@ class JsonToGrpc {
     response.setPathList(arrPatch).setResult(value.result);
     return response;
   }
+
+    public Candidate(value: Record<string, any>): CandidateResponse {
+        console.info(value);
+        const response = new CandidateResponse();
+
+        const stakesList: Array<CandidateResponse.Stake> = [];
+        value.stakes.forEach((item: Record<string, any>) => {
+            const stake = new CandidateResponse.Stake()
+                .setCoin(this.coinByJson(item.coin))
+                .setValue(item.value)
+                .setBipValue(item.bip_value)
+                .setOwner(item.owner);
+            stakesList.push(stake);
+        });
+        response
+            .setRewardAddress(value.reward_address)
+            .setOwnerAddress(value.owner_address)
+            .setControlAddress(value.control_address)
+            .setTotalStake(value.total_stake)
+            .setPublicKey(value.public_key)
+            // .setCommission(value.commission)
+            // .setUsedSlots(value.used_slots)
+            // .setUniqUsers(value.uniq_users)
+            // .setMinStake(value.min_stake)
+            .setStakesList(stakesList)
+        ;
+        return response;
+    }
 }
 
 export default JsonToGrpc;
