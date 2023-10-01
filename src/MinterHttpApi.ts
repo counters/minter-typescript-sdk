@@ -4,6 +4,8 @@ import {
   AddressResponse,
   BestTradeRequest,
   BestTradeResponse,
+  CandidateRequest,
+  CandidateResponse,
   CoinInfoRequest,
   CoinInfoResponse,
   EstimateCoinSellRequest,
@@ -189,6 +191,30 @@ class MinterHttpApi {
     if (request.getMaxDepth()) params.push({ max_depth: request.getMaxDepth().toString() });
     const type = this.convertBestTradeType.getName(request.getType());
     return this.url(this.nodeUrl + "best_trade/" + request.getSellCoin() + "/" + request.getBuyCoin() + "/" + type + "/" + request.getAmount(), params);
+  }
+
+  private urlCandidate(request: CandidateRequest) {
+    const params: Array<Record<string, string>> = [];
+    if (request.getHeight()) params.push({ height: request.getHeight().toString() });
+    if (request.getNotShowStakes() === true) params.push({ not_show_stakes: "true" });
+    else if (request.getNotShowStakes() === false) params.push({ not_show_stakes: "false" });
+    return this.url(this.nodeUrl + "candidate/" + request.getPublicKey(), params);
+  }
+  public getCandidateJsonByRequest(request: CandidateRequest, timeout: number | null = null): Promise<Record<string, any>> {
+    return this.httpGet(this.urlCandidate(request), timeout);
+  }
+
+  public getCandidateGrpcByRequest(request: CandidateRequest, timeout: number | null = null): Promise<CandidateResponse> {
+    return new Promise<CandidateResponse>((resolve, reject) => {
+      this.getCandidateJsonByRequest(request, timeout)
+        .then(value => resolve(this.jsonToGrpc.Candidate(value)))
+        .catch(reject);
+    });
+  }
+
+  public getCandidateGrpc(publicKey: string, notShowStakes: boolean | null = null, height: number | null = null, timeout: number | null = null): Promise<CandidateResponse> {
+    const request = this.params.requestCandidate(publicKey, notShowStakes, height);
+    return this.getCandidateGrpcByRequest(request, timeout);
   }
 }
 

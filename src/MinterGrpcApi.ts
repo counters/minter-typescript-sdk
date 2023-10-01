@@ -6,7 +6,9 @@ import {
   EstimateCoinSellRequest,
   EstimateCoinSellResponse,
   BestTradeRequest,
-  BestTradeResponse
+  BestTradeResponse,
+  CandidateResponse,
+  CandidateRequest
 } from "./proto/resources_pb";
 import { ApiServiceClient } from "./proto/api_grpc_pb";
 import { credentials, Metadata } from "@grpc/grpc-js";
@@ -62,5 +64,14 @@ export default class MinterGrpcApi {
         deadline: new Date().setMilliseconds(new Date().getMilliseconds() + deadline)
       };
     else return {};
+  }
+
+  public getCandidateGrpc(request: CandidateRequest, deadline: number | null): Promise<CandidateResponse> {
+    return new Promise<CandidateResponse>((resolve, reject) => {
+      this.client.candidate(request, new Metadata(), this.getOptions(deadline), (err, response) => {
+        if (err) reject(err);
+        else resolve(response);
+      });
+    });
   }
 }

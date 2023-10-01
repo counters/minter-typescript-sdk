@@ -1,5 +1,15 @@
-import { StringValue } from "google-protobuf/google/protobuf/wrappers_pb";
-import { AddressBalance, AddressDelegatedBalance, AddressResponse, BestTradeResponse, Coin, CoinInfoResponse, EstimateCoinSellResponse, Multisig } from "./proto/resources_pb";
+import {StringValue, UInt64Value} from "google-protobuf/google/protobuf/wrappers_pb";
+import {
+    AddressBalance,
+    AddressDelegatedBalance,
+    AddressResponse,
+    BestTradeResponse,
+    CandidateResponse,
+    Coin,
+    CoinInfoResponse,
+    EstimateCoinSellResponse,
+    Multisig
+} from "./proto/resources_pb";
 import ConvertSwapFrom from "./convert/ConvertSwapFrom";
 
 class JsonToGrpc {
@@ -82,7 +92,7 @@ class JsonToGrpc {
   }
 
   private coinByJson(coin: any): Coin {
-    return new Coin().setId(coin.id).setSymbol(coin.symbol);
+    return new Coin().setId(parseInt(coin.id)).setSymbol(coin.symbol);
   }
 
   BestTrade(value: Record<string, any>): BestTradeResponse {
@@ -94,6 +104,40 @@ class JsonToGrpc {
     response.setPathList(arrPatch).setResult(value.result);
     return response;
   }
+
+    public Candidate(value: Record<string, any>): CandidateResponse {
+        // console.info(value);
+        const response = new CandidateResponse();
+
+        const stakesList: Array<CandidateResponse.Stake> = [];
+        value.stakes.forEach((item: Record<string, any>) => {
+            const stake = new CandidateResponse.Stake()
+                .setCoin(this.coinByJson(item.coin))
+                .setValue(item.value)
+                .setBipValue(item.bip_value)
+                .setOwner(item.owner);
+            stakesList.push(stake);
+        });
+        const minStake = value.min_stake ? new StringValue().setValue(value.min_stake) : undefined;
+        response
+            .setId(Number(value.id))
+            .setRewardAddress(value.reward_address)
+            .setOwnerAddress(value.owner_address)
+            .setControlAddress(value.control_address)
+            .setTotalStake(value.total_stake)
+            .setPublicKey(value.public_key)
+            // .setCommission(Number(value.commission))
+            .setCommission(parseInt(value.commission))
+            .setUsedSlots(new UInt64Value().setValue(parseInt(value.used_slots)))
+            .setUniqUsers(new UInt64Value().setValue(parseInt(value.uniq_users)))
+            .setMinStake(minStake)
+            .setStakesList(stakesList)
+            .setStatus(parseInt(value.status))
+            .setValidator(value.status)
+            .setJailedUntil(parseInt(value.jailed_until))
+        ;
+        return response;
+    }
 }
 
 export default JsonToGrpc;

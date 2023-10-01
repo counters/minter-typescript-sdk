@@ -11,7 +11,9 @@ import {
   SwapFrom,
   BestTradeRequest,
   BestTradeResponse,
-  EstimateCoinSellRequest
+  EstimateCoinSellRequest,
+  CandidateResponse,
+  CandidateRequest
 } from "./proto/resources_pb";
 import Params from "./Params";
 import ConvertAmount from "./utils/ConvertAmount";
@@ -115,6 +117,22 @@ class MinterApi {
       return this.minterGrpcApi!.getBestTradeGrpc(this.params.requestBestTrade(sell_coin, this.convertAmount.toPip(amount), buy_coin, type, max_depth, height), deadline);
     } else {
       return this.minterHttpApi!.getBestTradeGrpc(sell_coin, amount, buy_coin, type, max_depth, height, deadline);
+    }
+  }
+
+  public getCandidateGrpc(publicKey: string, notShowStakes: boolean | null = null, height: number | null = null, deadline: number | null = null): Promise<CandidateResponse> {
+    if (this.grpcOptions) {
+      return this.minterGrpcApi!.getCandidateGrpc(this.params.requestCandidate(publicKey, notShowStakes, height), deadline);
+    } else {
+      return this.minterHttpApi!.getCandidateGrpc(publicKey, notShowStakes, height, deadline);
+    }
+  }
+
+  public getCandidateGrpcByRequest(request: CandidateRequest, deadline: number | null = null): Promise<CandidateResponse> {
+    if (this.grpcOptions) {
+      return this.minterGrpcApi!.getCandidateGrpc(request, deadline);
+    } else {
+      return this.minterHttpApi!.getCandidateGrpcByRequest(request, deadline);
     }
   }
 }
