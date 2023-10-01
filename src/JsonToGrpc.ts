@@ -92,7 +92,7 @@ class JsonToGrpc {
   }
 
   private coinByJson(coin: any): Coin {
-    return new Coin().setId(coin.id).setSymbol(coin.symbol);
+    return new Coin().setId(parseInt(coin.id)).setSymbol(coin.symbol);
   }
 
   BestTrade(value: Record<string, any>): BestTradeResponse {
