@@ -106,7 +106,7 @@ class JsonToGrpc {
   }
 
     public Candidate(value: Record<string, any>): CandidateResponse {
-        console.info(value);
+        // console.info(value);
         const response = new CandidateResponse();
 
         const stakesList: Array<CandidateResponse.Stake> = [];
@@ -126,12 +126,15 @@ class JsonToGrpc {
             .setControlAddress(value.control_address)
             .setTotalStake(value.total_stake)
             .setPublicKey(value.public_key)
-            .setCommission(Number(value.commission))
-            .setUsedSlots(new UInt64Value().setValue(Number(value.used_slots)))
-            .setUniqUsers(new UInt64Value().setValue(Number(value.uniq_users)))
+            // .setCommission(Number(value.commission))
+            .setCommission(parseInt(value.commission))
+            .setUsedSlots(new UInt64Value().setValue(parseInt(value.used_slots)))
+            .setUniqUsers(new UInt64Value().setValue(parseInt(value.uniq_users)))
             .setMinStake(minStake)
             .setStakesList(stakesList)
-            .setStatus(Number(value.status))
+            .setStatus(parseInt(value.status))
+            .setValidator(value.status)
+            .setJailedUntil(parseInt(value.jailed_until))
         ;
         return response;
     }
