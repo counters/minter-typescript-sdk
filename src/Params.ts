@@ -1,7 +1,7 @@
 import {
     AddressRequest,
     BestTradeRequest,
-    CandidateRequest,
+    CandidateRequest, CandidatesRequest,
     CoinInfoRequest,
     EstimateCoinSellRequest,
     SwapFrom
@@ -65,6 +65,15 @@ class Params {
         if (height) request.setHeight(height);
         if (notShowStakes !== null) request.setNotShowStakes(notShowStakes);
         return request.setPublicKey(publicKey);
+    }
+
+    public requestCandidates(includeStakes: boolean | null = null, notShowStakes: boolean | null = null, candidateStatus:  CandidatesRequest.CandidateStatus | null = null, height: number | null = null): CandidatesRequest {
+        const request = new CandidatesRequest();
+        if (height) request.setHeight(height);
+        if (includeStakes !== null) request.setIncludeStakes(includeStakes);
+        if (notShowStakes !== null) request.setNotShowStakes(notShowStakes);
+        if (candidateStatus !== null) request.setStatus(candidateStatus);
+        return request;
     }
 }
 
