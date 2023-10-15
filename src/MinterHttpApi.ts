@@ -5,7 +5,9 @@ import {
     BestTradeRequest,
     BestTradeResponse,
     CandidateRequest,
-    CandidateResponse, CandidatesRequest, CandidatesResponse,
+    CandidateResponse,
+    CandidatesRequest,
+    CandidatesResponse,
     CoinInfoRequest,
     CoinInfoResponse,
     EstimateCoinSellRequest,
@@ -18,9 +20,9 @@ import Params from "./Params";
 import ConvertSwapFrom from "./convert/ConvertSwapFrom";
 import ConvertAmount from "./utils/ConvertAmount";
 import ConvertBestTradeType from "./convert/ConvertBestTradeType";
+import ConvertCandidateStatus from "./convert/ConvertCandidateStatus";
 
 class MinterHttpApi {
-
   private httpOptions: HttpOptions;
   private nodeUrl: string;
 
@@ -153,20 +155,16 @@ class MinterHttpApi {
     return query.length > 0 ? patch + "?" + query.join("&") : patch;
   }
 
-  private httpGet(url: string, timeout: number | null = null): Promise<Record<string, Array<any>>> {
-    return new Promise<Record<string, Array<any>>>((resolve, reject) => {
-      axios
-        .get(url)
-        .then(res => {
-          resolve(res.data);
-        })
-        .catch(error => {
-          // console.debug(error.response);
-          reject(error.response.data);
-          reject();
-        });
-    });
-  }
+    public getCandidatesGrpc(
+        includeStakes: boolean | null,
+        notShowStakes: boolean | null,
+        candidateStatus: CandidatesRequest.CandidateStatus | null,
+        height: number | null,
+        timeout: number | null
+    ): Promise<CandidatesResponse> {
+        const request = this.params.requestCandidates(includeStakes, notShowStakes, candidateStatus, height);
+        return this.getCandidatesGrpcByRequest(request, timeout);
+    }
 
   private urlEstimateCoinSell(request: EstimateCoinSellRequest) {
     // console.info(request.toObject());
@@ -218,19 +216,26 @@ class MinterHttpApi {
     return this.getCandidateGrpcByRequest(request, timeout);
   }
 
-    private urlCandidates(request: CandidatesRequest) {
-        const params: Array<Record<string, string>> = [];
-        if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-        if (request.getNotShowStakes() === true) params.push({ not_show_stakes: "true" });
-        else if (request.getNotShowStakes() === false) params.push({ not_show_stakes: "false" });
-        if (request.getIncludeStakes() === true) params.push({ include_stakes: "true" });
-        else if (request.getIncludeStakes() === false) params.push({ include_stakes: "false" });
-        request.getStatus().toString()
-        return this.url(this.nodeUrl + "candidate/" + request.getPublicKey(), params);
-    }
+  private httpGet(url: string, timeout: number | null = null): Promise<Record<string, Array<any>>> {
+    return new Promise<Record<string, Array<any>>>((resolve, reject) => {
+        // console.info(url);
+      axios
+        .get(url)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(error => {
+          // console.debug(error.response);
+          reject(error.response.data);
+          reject();
+        });
+    });
+  }
+
     public getCandidatesJsonByRequest(request: CandidatesRequest, timeout: number | null = null): Promise<Record<string, any>> {
         return this.httpGet(this.urlCandidates(request), timeout);
     }
+
     public getCandidatesGrpcByRequest(request: CandidatesRequest, timeout: number | null = null): Promise<CandidatesResponse> {
         return new Promise<CandidatesResponse>((resolve, reject) => {
             this.getCandidatesJsonByRequest(request, timeout)
@@ -239,9 +244,17 @@ class MinterHttpApi {
         });
     }
 
-    public getCandidatesGrpc(includeStakes: boolean | null, notShowStakes: boolean | null, candidateStatus: CandidatesRequest.CandidateStatus | null, height: number | null, timeout: number | null): Promise<CandidatesResponse> {
-        const request = this.params.requestCandidates(includeStakes, notShowStakes, candidateStatus, height);
-        return this.getCandidatesGrpcByRequest(request, timeout);
+    private urlCandidates(request: CandidatesRequest) {
+        const params: Array<Record<string, string>> = [];
+        if (request.getHeight()) params.push({height: request.getHeight().toString()});
+        if (request.getNotShowStakes() === true) params.push({not_show_stakes: "true"});
+        else if (request.getNotShowStakes() === false) params.push({not_show_stakes: "false"});
+        if (request.getIncludeStakes() === true) params.push({include_stakes: "all"});
+        else if (request.getIncludeStakes() === false) params.push({include_stakes: "false"});
+
+        const status = new ConvertCandidateStatus().get(request.getStatus());
+        if (status) params.push({status: status});
+        return this.url(this.nodeUrl + "candidates", params);
     }
 }
 

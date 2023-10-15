@@ -9,14 +9,14 @@ import {
     BestTradeResponse,
     CandidateResponse,
     CandidateRequest,
-    CandidatesRequest, CandidatesResponse
+    CandidatesRequest,
+    CandidatesResponse
 } from "./proto/resources_pb";
 import {ApiServiceClient} from "./proto/api_grpc_pb";
 import {credentials, Metadata} from "@grpc/grpc-js";
 import GrpcOptions from "./types/GrpcOptions";
 
 export default class MinterGrpcApi {
-
   private client: ApiServiceClient;
   private grpcOptions: GrpcOptions;
 
@@ -68,7 +68,7 @@ export default class MinterGrpcApi {
     else return {};
   }
 
-  public getCandidateGrpc(request: CandidateRequest, deadline: number | null=null): Promise<CandidateResponse> {
+    public getCandidateGrpc(request: CandidateRequest, deadline: number | null = null): Promise<CandidateResponse> {
     return new Promise<CandidateResponse>((resolve, reject) => {
       this.client.candidate(request, new Metadata(), this.getOptions(deadline), (err, response) => {
         if (err) reject(err);
@@ -77,7 +77,7 @@ export default class MinterGrpcApi {
     });
   }
 
-    public getCandidatesGrpc(request: CandidatesRequest, deadline: number | null=null): Promise<CandidatesResponse> {
+    public getCandidatesGrpc(request: CandidatesRequest, deadline: number | null = null): Promise<CandidatesResponse> {
         return new Promise<CandidatesResponse>((resolve, reject) => {
             this.client.candidates(request, new Metadata(), this.getOptions(deadline), (err, response) => {
                 if (err) reject(err);
