@@ -1,6 +1,6 @@
 {
   "name": "minter-typescript-sdk",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Minter SDK is written in TypeScript with native gRPC transport support",
   "main": "lib/index.js",
   "browser": {

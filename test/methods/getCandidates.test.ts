@@ -9,7 +9,7 @@ test("MinterApi().getCandidatesGrpc()", async () => {
 
   const include_stakes: boolean | null = null;
   const notShowStakes: boolean | null = null;
-    const candidateStatus: CandidatesRequest.CandidateStatus | null = nullL;
+    const candidateStatus: CandidatesRequest.CandidateStatus | null = null;
   const height: number | null = null;
   const timeout: number | null = null;
     const grpcResult = await grpcMinterApi.getCandidatesGrpc(include_stakes, notShowStakes, candidateStatus, height, timeout);
