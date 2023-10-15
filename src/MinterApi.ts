@@ -13,7 +13,7 @@ import {
     BestTradeResponse,
     EstimateCoinSellRequest,
     CandidateResponse,
-    CandidateRequest, CandidatesResponse
+    CandidateRequest, CandidatesResponse, CandidatesRequest
 } from "./proto/resources_pb";
 import Params from "./Params";
 import ConvertAmount from "./utils/ConvertAmount";
@@ -136,12 +136,11 @@ class MinterApi {
         }
     }
 
-    public getCandidatesGrpc(includeStakes: boolean, notShowStakes: boolean | null = null, height: number | null = null, deadline: number | null = null): Promise<CandidatesResponse> {
+    public getCandidatesGrpc(includeStakes: boolean | null = null, notShowStakes: boolean | null = null, candidateStatus:  CandidatesRequest.CandidateStatus | null = null, height: number | null = null, deadline: number | null = null): Promise<CandidatesResponse> {
         if (this.grpcOptions) {
-            return this.minterGrpcApi!.getCandidatesGrpc(this.params.requestCandidate(includeStakes, notShowStakes, height), deadline);
+            return this.minterGrpcApi!.getCandidatesGrpc(this.params.requestCandidates(includeStakes, notShowStakes, candidateStatus, height), deadline);
         } else {
-            throw new Error();
-            // return this.minterHttpApi!.getCandidateGrpc(publicKey, notShowStakes, height, deadline);
+            return this.minterHttpApi!.getCandidatesGrpc(includeStakes, notShowStakes, candidateStatus, height, deadline);
         }
     }
 }

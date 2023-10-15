@@ -1,16 +1,16 @@
 import axios from "axios";
 import {
-  AddressRequest,
-  AddressResponse,
-  BestTradeRequest,
-  BestTradeResponse,
-  CandidateRequest,
-  CandidateResponse,
-  CoinInfoRequest,
-  CoinInfoResponse,
-  EstimateCoinSellRequest,
-  EstimateCoinSellResponse,
-  SwapFrom
+    AddressRequest,
+    AddressResponse,
+    BestTradeRequest,
+    BestTradeResponse,
+    CandidateRequest,
+    CandidateResponse, CandidatesRequest, CandidatesResponse,
+    CoinInfoRequest,
+    CoinInfoResponse,
+    EstimateCoinSellRequest,
+    EstimateCoinSellResponse,
+    SwapFrom
 } from "./proto/resources_pb";
 import HttpOptions from "./types/HttpOptions";
 import JsonToGrpc from "./JsonToGrpc";
@@ -20,6 +20,7 @@ import ConvertAmount from "./utils/ConvertAmount";
 import ConvertBestTradeType from "./convert/ConvertBestTradeType";
 
 class MinterHttpApi {
+
   private httpOptions: HttpOptions;
   private nodeUrl: string;
 
@@ -216,6 +217,32 @@ class MinterHttpApi {
     const request = this.params.requestCandidate(publicKey, notShowStakes, height);
     return this.getCandidateGrpcByRequest(request, timeout);
   }
+
+    private urlCandidates(request: CandidatesRequest) {
+        const params: Array<Record<string, string>> = [];
+        if (request.getHeight()) params.push({ height: request.getHeight().toString() });
+        if (request.getNotShowStakes() === true) params.push({ not_show_stakes: "true" });
+        else if (request.getNotShowStakes() === false) params.push({ not_show_stakes: "false" });
+        if (request.getIncludeStakes() === true) params.push({ include_stakes: "true" });
+        else if (request.getIncludeStakes() === false) params.push({ include_stakes: "false" });
+        request.getStatus().toString()
+        return this.url(this.nodeUrl + "candidate/" + request.getPublicKey(), params);
+    }
+    public getCandidatesJsonByRequest(request: CandidatesRequest, timeout: number | null = null): Promise<Record<string, any>> {
+        return this.httpGet(this.urlCandidates(request), timeout);
+    }
+    public getCandidatesGrpcByRequest(request: CandidatesRequest, timeout: number | null = null): Promise<CandidatesResponse> {
+        return new Promise<CandidatesResponse>((resolve, reject) => {
+            this.getCandidatesJsonByRequest(request, timeout)
+                .then(value => resolve(this.jsonToGrpc.Candidates(value)))
+                .catch(reject);
+        });
+    }
+
+    public getCandidatesGrpc(includeStakes: boolean | null, notShowStakes: boolean | null, candidateStatus: CandidatesRequest.CandidateStatus | null, height: number | null, timeout: number | null): Promise<CandidatesResponse> {
+        const request = this.params.requestCandidates(includeStakes, notShowStakes, candidateStatus, height);
+        return this.getCandidatesGrpcByRequest(request, timeout);
+    }
 }
 
 export default MinterHttpApi;
