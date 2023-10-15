@@ -63,7 +63,7 @@ console.info(bestTrade.toObject()); // { pathList: [ 3757, 1902 ], result: '7929
 ```
 
 ### Other methods available
-estimateCoinSell, getAddress, getCandidate
+estimateCoinSell, getAddress, getCandidate, getCandidates
 
 ### Advanced usage
 
