@@ -1,4 +1,4 @@
-declare type GrpcOptions = {
+type GrpcOptions = {
     hostname: string;
     port: number;
     deadline: number | null;
