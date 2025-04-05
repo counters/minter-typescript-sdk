@@ -106,7 +106,7 @@ class MinterApi {
     }
   }
 
-  getBestTradeGrpc(
+  public getBestTradeGrpc(
     sell_coin: number,
     amount: number,
     buy_coin: number,
@@ -151,6 +151,7 @@ class MinterApi {
       return this.minterHttpApi!.getCandidatesGrpc(includeStakes, notShowStakes, candidateStatus, height, deadline);
     }
   }
+
 }
 
 export default MinterApi;
