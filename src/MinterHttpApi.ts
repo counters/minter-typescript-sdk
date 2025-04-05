@@ -218,7 +218,6 @@ class MinterHttpApi {
 
   private httpGet(url: string, timeout: number | null = null): Promise<Record<string, Array<any>>> {
     return new Promise<Record<string, Array<any>>>((resolve, reject) => {
-      // console.info(url);
       axios
         .get(url)
         .then(res => {
