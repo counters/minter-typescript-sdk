@@ -1,4 +1,3 @@
-
 import { AddressRequest, BestTradeRequest, CandidateRequest, CandidatesRequest, CoinInfoRequest, EstimateCoinSellRequest, SwapFrom } from "./proto/resources_pb";
 
 class Params {
@@ -36,7 +35,7 @@ class Params {
       .setCoinIdToBuy(coinToBuy);
   }
 
-  requestBestTrade(
+  public requestBestTrade(
     sell_coin: number,
     amount: string,
     buy_coin: number,
