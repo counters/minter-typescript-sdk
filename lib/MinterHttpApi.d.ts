@@ -1,4 +1,4 @@
-import { AddressRequest, AddressResponse, BestTradeRequest, BestTradeResponse, CoinInfoRequest, CoinInfoResponse, EstimateCoinSellRequest, EstimateCoinSellResponse, SwapFrom } from "./proto/resources_pb";
+import { AddressRequest, AddressResponse, BestTradeRequest, BestTradeResponse, CandidateRequest, CandidateResponse, CandidatesRequest, CandidatesResponse, CoinInfoRequest, CoinInfoResponse, EstimateCoinSellRequest, EstimateCoinSellResponse, SwapFrom } from "./proto/resources_pb";
 import HttpOptions from "./types/HttpOptions";
 declare class MinterHttpApi {
     private httpOptions;
@@ -25,8 +25,16 @@ declare class MinterHttpApi {
     private urlCoinInfo;
     private urlAddress;
     private url;
-    private httpGet;
+    getCandidatesGrpc(includeStakes: boolean | null, notShowStakes: boolean | null, candidateStatus: CandidatesRequest.CandidateStatus | null, height: number | null, timeout: number | null): Promise<CandidatesResponse>;
     private urlEstimateCoinSell;
     private urlBestTrade;
+    private urlCandidate;
+    getCandidateJsonByRequest(request: CandidateRequest, timeout?: number | null): Promise<Record<string, any>>;
+    getCandidateGrpcByRequest(request: CandidateRequest, timeout?: number | null): Promise<CandidateResponse>;
+    getCandidateGrpc(publicKey: string, notShowStakes?: boolean | null, height?: number | null, timeout?: number | null): Promise<CandidateResponse>;
+    private httpGet;
+    getCandidatesJsonByRequest(request: CandidatesRequest, timeout?: number | null): Promise<Record<string, any>>;
+    getCandidatesGrpcByRequest(request: CandidatesRequest, timeout?: number | null): Promise<CandidatesResponse>;
+    private urlCandidates;
 }
 export default MinterHttpApi;

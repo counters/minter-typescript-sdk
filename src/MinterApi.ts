@@ -3,19 +3,21 @@ import GrpcOptions from "./types/GrpcOptions";
 import MinterHttpApi from "./MinterHttpApi";
 import MinterGrpcApi from "./MinterGrpcApi";
 import {
-    CoinInfoResponse,
-    CoinInfoRequest,
-    AddressResponse,
-    AddressRequest,
-    EstimateCoinSellResponse,
-    SwapFrom,
-    BestTradeRequest,
-    BestTradeResponse,
-    EstimateCoinSellRequest,
-    CandidateResponse,
-    CandidateRequest,
-    CandidatesResponse,
-    CandidatesRequest
+
+  CoinInfoResponse,
+  CoinInfoRequest,
+  AddressResponse,
+  AddressRequest,
+  EstimateCoinSellResponse,
+  SwapFrom,
+  BestTradeRequest,
+  BestTradeResponse,
+  EstimateCoinSellRequest,
+  CandidateResponse,
+  CandidateRequest,
+  CandidatesResponse,
+  CandidatesRequest
+
 } from "./proto/resources_pb";
 import Params from "./Params";
 import ConvertAmount from "./utils/ConvertAmount";
@@ -138,19 +140,20 @@ class MinterApi {
         }
     }
 
-    public getCandidatesGrpc(
-        includeStakes: boolean | null = null,
-        notShowStakes: boolean | null = null,
-        candidateStatus: CandidatesRequest.CandidateStatus | null = null,
-        height: number | null = null,
-        deadline: number | null = null
-    ): Promise<CandidatesResponse> {
-        if (this.grpcOptions) {
-            return this.minterGrpcApi!.getCandidatesGrpc(this.params.requestCandidates(includeStakes, notShowStakes, candidateStatus, height), deadline);
-        } else {
-            return this.minterHttpApi!.getCandidatesGrpc(includeStakes, notShowStakes, candidateStatus, height, deadline);
-        }
+  public getCandidatesGrpc(
+    includeStakes: boolean | null = null,
+    notShowStakes: boolean | null = null,
+    candidateStatus: CandidatesRequest.CandidateStatus | null = null,
+    height: number | null = null,
+    deadline: number | null = null
+  ): Promise<CandidatesResponse> {
+    if (this.grpcOptions) {
+      return this.minterGrpcApi!.getCandidatesGrpc(this.params.requestCandidates(includeStakes, notShowStakes, candidateStatus, height), deadline);
+    } else {
+      return this.minterHttpApi!.getCandidatesGrpc(includeStakes, notShowStakes, candidateStatus, height, deadline);
     }
+  }
+
 }
 
 export default MinterApi;
