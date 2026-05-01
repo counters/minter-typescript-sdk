@@ -19,6 +19,7 @@ jobs:
         run: npm ci
       - name: Verify build output
         run: ls -R lib/generated
+        # Test Disabled. All public test & prod nodes down
 
   publish-npm:
     needs: build
