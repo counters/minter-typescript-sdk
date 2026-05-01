@@ -21,7 +21,7 @@
     "prettier": "prettier --write src/* test/*",
     "tslint": "tslint -p tslint -p tsconfig.json",
     "codestyle": "npm run prettier && npm run tslint",
-    "grpc": "sh bin/build_grpc.sh",
+    "grpc": "sh bin/build_grpc.sh && node scripts/ignore-generated.js",
     "copy_grpc": "sh bin/copy_grpc.sh",
     "prebuild": "npm run grpc",
     "predev": "npm run grpc"
