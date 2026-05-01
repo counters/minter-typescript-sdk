@@ -1,10 +1,11 @@
 #!/bin/bash
 
 PROTO_DIR=./src/proto
-LIBS_DIR=./src/proto
+#LIBS_DIR=./libs/proto
 
-rm -r "${PROTO_DIR}/*"
-mkdir -p "${LIBS_DIR}"
+mkdir -p "${PROTO_DIR}"
+rm -r "${PROTO_DIR}"
+
 # Generate JavaScript code
 yarn run grpc_tools_node_protoc \
     --js_out=import_style=commonjs,binary:${PROTO_DIR} \
