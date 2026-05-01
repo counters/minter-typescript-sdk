@@ -106,3 +106,9 @@ dist
 # etc
 /.yarn/
 /.idea/
+
+
+# gRPC generated
+
+/src/proto/
+/src/generated/
