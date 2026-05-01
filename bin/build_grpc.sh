@@ -4,7 +4,7 @@ PROTO_DIR=./src/proto
 LIBS_DIR=./src/proto
 
 rm -r "${PROTO_DIR}/*"
-
+mkdir -p "${LIBS_DIR}"
 # Generate JavaScript code
 yarn run grpc_tools_node_protoc \
     --js_out=import_style=commonjs,binary:${PROTO_DIR} \
