@@ -57,8 +57,4 @@ jobs:
           version: '27.x'
       - run: npm run build
       - run: cp docs/README.md README.md
-      - name: Configure OIDC token exchange
-        uses: npmjs/action-configure-oidc@v2
-        with:
-          registry-url: 'https://registry.npmjs.org/'
       - run: npm publish --access public --provenance
