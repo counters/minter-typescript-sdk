@@ -1,5 +1,5 @@
 // import axios from 'axios';
-// import { CoinInfoRequest, CoinInfoResponse } from './proto/resources_pb';
+// import { CoinInfoRequest, CoinInfoResponse } from './generated/proto/resources';
 import HttpOptions from "./types/HttpOptions";
 // import JsonToGrpc from './JsonToGrpc';
 // import Params from './Params';

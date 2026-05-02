@@ -11,8 +11,8 @@ import {
   CandidateRequest,
   CandidatesRequest,
   CandidatesResponse
-} from "./proto/resources_pb";
-import { ApiServiceClient } from "./proto/api_grpc_pb";
+} from "./generated/proto/resources";
+import { ApiServiceClient } from "./generated/proto/api";
 import { credentials, Metadata } from "@grpc/grpc-js";
 import GrpcOptions from "./types/GrpcOptions";
 

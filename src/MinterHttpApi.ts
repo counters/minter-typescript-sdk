@@ -12,8 +12,10 @@ import {
   CoinInfoResponse,
   EstimateCoinSellRequest,
   EstimateCoinSellResponse,
-  SwapFrom
-} from "./proto/resources_pb";
+  SwapFrom,
+    BestTradeRequest_Type,
+    CandidatesRequest_CandidateStatus
+} from "./generated/proto/resources";
 import HttpOptions from "./types/HttpOptions";
 import JsonToGrpc from "./JsonToGrpc";
 import Params from "./Params";
@@ -120,7 +122,7 @@ class MinterHttpApi {
     sell_coin: number,
     amount: number,
     buy_coin: number,
-    type: BestTradeRequest.Type,
+    type: BestTradeRequest_Type,
     max_depth: number | null = null,
     height: number | null = null,
     timeout: number | null = null
@@ -131,16 +133,16 @@ class MinterHttpApi {
 
   private urlCoinInfo(request: CoinInfoRequest): string {
     const params: Array<Record<string, string>> = [];
-    if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-    return this.url(this.nodeUrl + "coin_info/" + request.getSymbol(), params);
+    if (request.height) params.push({ height: request.height.toString() });
+    return this.url(this.nodeUrl + "coin_info/" + request.symbol, params);
   }
 
   private urlAddress(request: AddressRequest) {
     const params: Array<Record<string, string>> = [];
-    if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-    if (request.getDelegated() === true) params.push({ delegated: "true" });
-    else if (request.getDelegated() === false) params.push({ delegated: "false" });
-    return this.url(this.nodeUrl + "address/" + request.getAddress(), params);
+    if (request.height) params.push({ height: request.height.toString() });
+    if (request.delegated === true) params.push({ delegated: "true" });
+    else if (request.delegated === false) params.push({ delegated: "false" });
+    return this.url(this.nodeUrl + "address/" + request.address, params);
   }
 
   private url(patch: string, params: ReadonlyArray<Record<string, string>>): string {
@@ -158,7 +160,7 @@ class MinterHttpApi {
   public getCandidatesGrpc(
     includeStakes: boolean | null,
     notShowStakes: boolean | null,
-    candidateStatus: CandidatesRequest.CandidateStatus | null,
+    candidateStatus: CandidatesRequest_CandidateStatus | null,
     height: number | null,
     timeout: number | null
   ): Promise<CandidatesResponse> {
@@ -169,35 +171,39 @@ class MinterHttpApi {
   private urlEstimateCoinSell(request: EstimateCoinSellRequest) {
     // console.info(request.toObject());
     const params: Array<Record<string, string>> = [];
-    if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-    params.push({ coin_id_to_sell: request.getCoinIdToSell().toString() });
-    params.push({ coin_id_to_buy: request.getCoinIdToBuy().toString() });
-    params.push({ value_to_sell: request.getValueToSell().toString() });
-    const swapFrom = this.convertSwapFrom.getName(request.getSwapFrom());
+    if (request.height) params.push({ height: request.height.toString() });
+    params.push({ coin_id_to_sell: request.coinIdToSell!.toString() });
+    params.push({ coin_id_to_buy: request.coinIdToBuy!.toString() });
+    params.push({ value_to_sell: request.valueToSell.toString() });
+    const swapFrom = this.convertSwapFrom.getName(request.swapFrom);
     if (swapFrom != null) params.push({ swap_from: swapFrom });
     // params.push({ route: request.getCoinIdToSell().toString() });
-    request.getRouteList().forEach(value => {
-      params.push({ route: value.toString() });
-    });
-    params.push({ coin_id_commission: request.getCoinIdCommission().toString() });
+    if(request.route) {
+      request.route.forEach(value => {
+        params.push({ route: value.toString() });
+      });
+    }
+    if (request.coinIdCommission) {
+      params.push({ coin_id_commission: request.coinIdCommission.toString() });
+    }
     // console.info(params);
     return this.url(this.nodeUrl + "estimate_coin_sell", params);
   }
 
   private urlBestTrade(request: BestTradeRequest): string {
     const params: Array<Record<string, string>> = [];
-    if (request.getHeight() && request.getHeight() !== 0) params.push({ height: request.getHeight().toString() });
-    if (request.getMaxDepth()) params.push({ max_depth: request.getMaxDepth().toString() });
-    const type = this.convertBestTradeType.getName(request.getType());
-    return this.url(this.nodeUrl + "best_trade/" + request.getSellCoin() + "/" + request.getBuyCoin() + "/" + type + "/" + request.getAmount(), params);
+    if (request.height && request.height !== 0) params.push({ height: request.height.toString() });
+    if (request.maxDepth) params.push({ max_depth: request.maxDepth.toString() });
+    const type = this.convertBestTradeType.getName(request.type);
+    return this.url(this.nodeUrl + "best_trade/" + request.sellCoin + "/" + request.buyCoin + "/" + type + "/" + request.amount, params);
   }
 
   private urlCandidate(request: CandidateRequest) {
     const params: Array<Record<string, string>> = [];
-    if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-    if (request.getNotShowStakes() === true) params.push({ not_show_stakes: "true" });
-    else if (request.getNotShowStakes() === false) params.push({ not_show_stakes: "false" });
-    return this.url(this.nodeUrl + "candidate/" + request.getPublicKey(), params);
+    if (request.height) params.push({ height: request.height.toString() });
+    if (request.notShowStakes === true) params.push({ not_show_stakes: "true" });
+    else if (request.notShowStakes === false) params.push({ not_show_stakes: "false" });
+    return this.url(this.nodeUrl + "candidate/" + request.publicKey, params);
   }
   public getCandidateJsonByRequest(request: CandidateRequest, timeout: number | null = null): Promise<Record<string, any>> {
     return this.httpGet(this.urlCandidate(request), timeout);
@@ -245,13 +251,13 @@ class MinterHttpApi {
 
   private urlCandidates(request: CandidatesRequest) {
     const params: Array<Record<string, string>> = [];
-    if (request.getHeight()) params.push({ height: request.getHeight().toString() });
-    if (request.getNotShowStakes() === true) params.push({ not_show_stakes: "true" });
-    else if (request.getNotShowStakes() === false) params.push({ not_show_stakes: "false" });
-    if (request.getIncludeStakes() === true) params.push({ include_stakes: "all" });
-    else if (request.getIncludeStakes() === false) params.push({ include_stakes: "false" });
+    if (request.height) params.push({ height: request.height.toString() });
+    if (request.notShowStakes === true) params.push({ not_show_stakes: "true" });
+    else if (request.notShowStakes === false) params.push({ not_show_stakes: "false" });
+    if (request.includeStakes === true) params.push({ include_stakes: "all" });
+    else if (request.includeStakes === false) params.push({ include_stakes: "false" });
 
-    const status = new ConvertCandidateStatus().get(request.getStatus());
+    const status = new ConvertCandidateStatus().get(request.status);
     if (status) params.push({ status: status });
     return this.url(this.nodeUrl + "candidates", params);
   }

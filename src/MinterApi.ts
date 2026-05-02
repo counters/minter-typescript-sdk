@@ -3,20 +3,22 @@ import GrpcOptions from "./types/GrpcOptions";
 import MinterHttpApi from "./MinterHttpApi";
 import MinterGrpcApi from "./MinterGrpcApi";
 import {
-  CoinInfoResponse,
-  CoinInfoRequest,
-  AddressResponse,
-  AddressRequest,
-  EstimateCoinSellResponse,
-  SwapFrom,
-  BestTradeRequest,
-  BestTradeResponse,
-  EstimateCoinSellRequest,
-  CandidateResponse,
-  CandidateRequest,
-  CandidatesResponse,
-  CandidatesRequest
-} from "./proto/resources_pb";
+    CoinInfoResponse,
+    CoinInfoRequest,
+    AddressResponse,
+    AddressRequest,
+    EstimateCoinSellResponse,
+    SwapFrom,
+    BestTradeRequest,
+    BestTradeResponse,
+    EstimateCoinSellRequest,
+    CandidateResponse,
+    CandidateRequest,
+    CandidatesResponse,
+    CandidatesRequest,
+    BestTradeRequest_Type,
+    CandidatesRequest_CandidateStatus,
+} from "./generated/proto/resources";
 import Params from "./Params";
 import ConvertAmount from "./utils/ConvertAmount";
 
@@ -110,7 +112,7 @@ class MinterApi {
     sell_coin: number,
     amount: number,
     buy_coin: number,
-    type: BestTradeRequest.Type,
+    type: BestTradeRequest_Type,
     max_depth: number | null = null,
     height: number | null = null,
     deadline: number | null = null
@@ -141,7 +143,7 @@ class MinterApi {
   public getCandidatesGrpc(
     includeStakes: boolean | null = null,
     notShowStakes: boolean | null = null,
-    candidateStatus: CandidatesRequest.CandidateStatus | null = null,
+    candidateStatus: CandidatesRequest_CandidateStatus | null = null,
     height: number | null = null,
     deadline: number | null = null
   ): Promise<CandidatesResponse> {

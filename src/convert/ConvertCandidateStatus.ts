@@ -1,5 +1,4 @@
-import {CandidatesRequest} from '../proto/resources_pb';
-import CandidateStatus = CandidatesRequest.CandidateStatus;
+import {CandidatesRequest_CandidateStatus} from '../generated/proto/resources';
 
 class ConvertCandidateStatus {
 
@@ -8,11 +7,11 @@ class ConvertCandidateStatus {
      * @param candidateStatus
      * @return string | null
      */
-    public get(candidateStatus: CandidateStatus | null = null): string | null {
-        if (candidateStatus === CandidateStatus.ALL) return 'all'
-        else if (candidateStatus === CandidateStatus.OFF) return 'off'
-        else if (candidateStatus === CandidateStatus.ON) return 'on'
-        else if (candidateStatus === CandidateStatus.VALIDATOR) return 'validator'
+    public get(candidateStatus: CandidatesRequest_CandidateStatus | null = null): string | null {
+        if (candidateStatus === CandidatesRequest_CandidateStatus.all) return 'all'
+        else if (candidateStatus === CandidatesRequest_CandidateStatus.off) return 'off'
+        else if (candidateStatus === CandidatesRequest_CandidateStatus.on) return 'on'
+        else if (candidateStatus === CandidatesRequest_CandidateStatus.validator) return 'validator'
         else return null;
     }
 }
