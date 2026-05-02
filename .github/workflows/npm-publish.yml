@@ -45,6 +45,10 @@ jobs:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org/'
       - run: npm ci
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: '27.x'
       - run: npm run build
       - run: cp docs/README.md README.md
       - run: npm publish
