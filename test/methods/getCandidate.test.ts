@@ -11,8 +11,8 @@ test("MinterApi().getCandidateGrpc()", async () => {
   const height: number | null = null;
   const timeout: number | null = null;
   const grpcResult = await grpcMinterApi.getCandidateGrpc(publicKey, notShowStakes, height, timeout);
-    // console.info(grpcResult.toObject());
+    // console.info(grpcResult);
   const httpResult = await httpMinterApi.getCandidateGrpc(publicKey, notShowStakes, height, timeout);
-    // console.info(httpResult.toObject());
-  expect(grpcResult.toObject()).toEqual(httpResult.toObject());
+    // console.info(httpResult);
+  expect(grpcResult).toEqual(httpResult);
 });

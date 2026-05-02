@@ -8,8 +8,8 @@ test("MinterApi().getCoinInfoGrpc()", async () => {
   const symbol = "ROBOT";
   const grpcResult = await grpcMinterApi.getCoinInfoGrpc(symbol);
   const httpResult = await httpMinterApi.getCoinInfoGrpc(symbol);
-  expect(grpcResult.toObject()).toEqual(httpResult.toObject());
-  expect(grpcResult.getSymbol()).toEqual(symbol);
+  expect(grpcResult).toEqual(httpResult);
+  expect(grpcResult.symbol).toEqual(symbol);
 });
 
 test("MinterApi().getCoinInfoGrpc2()", async () => {
@@ -19,6 +19,6 @@ test("MinterApi().getCoinInfoGrpc2()", async () => {
   const symbol = "USDTE";
   const grpcResult = await grpcMinterApi.getCoinInfoGrpc(symbol);
   const httpResult = await httpMinterApi.getCoinInfoGrpc(symbol);
-  expect(grpcResult.toObject()).toEqual(httpResult.toObject());
-  expect(grpcResult.getSymbol()).toEqual(symbol);
+  expect(grpcResult).toEqual(httpResult);
+  expect(grpcResult.symbol).toEqual(symbol);
 });
