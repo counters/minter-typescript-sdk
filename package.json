@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/counters/minter-typescript-sdk.git"
+    "url": "git+https://github.com/counters/minter-typescript-sdk.git"
   },
   "scripts": {
     "test": "jest",
