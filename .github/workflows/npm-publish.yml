@@ -28,6 +28,7 @@ jobs:
         uses: arduino/setup-protoc@v3
         with:
           version: '27.x'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: npm ci
